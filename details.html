@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Details</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.min.css" />
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="page.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .details {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        form {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        label {
+            margin-right: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="navbar">
+        <div class="logo">
+
+            <img src="images/kavach-logo-white.png" alt="Logo">
+        </div>
+        <div class="name">
+            <h1>i-KSHANA</h1>
+        </div>
+        <div class="nav-elements">
+            <div class="ELEMENTS">
+                <a href="http://127.0.0.1:5502/page.html">HOME</a>
+                <a href="http://127.0.0.1:5502/details.html">DETAILS</a>
+            </div>
+            <button class="login-button">Login</button>
+        </div>
+    </div>
+    <div class="details">
+        <h1>Choose a Unit Option</h1>
+
+        <form action="d.html" method="post" id="unitForm">
+            <label>
+                <input type="radio" name="unit" value="unit1"> Unit 1
+            </label>
+            <label>
+                <input type="radio" name="unit" value="unit2"> Unit 2
+            </label>
+            <label>
+                <input type="radio" name="unit" value="unit3"> Unit 3
+            </label>
+            <br>
+            <input type="button" value="Submit" onclick="submitForm()">
+        </form>
+    </div>
+
+    <script>
+        function submitForm() {
+            var selectedUnit = document.querySelector('input[name="unit"]:checked');
+            if (selectedUnit) {
+                // Redirect to the selected unit page
+                window.location.href = selectedUnit.value + '.html';
+            } else {
+                alert("Please choose a unit option.");
+            }
+        }
+    </script>
+</body>
+
+</html>

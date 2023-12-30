@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.min.css" />
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="page.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .details {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        form {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        label {
+            margin-right: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main">
+        <section class="d-unit">
+            <div class="navbar">
+                <div class="logo">
+
+                    <img src="images/kavach-logo-white.png" alt="Logo">
+                </div>
+                <div class="name">
+                    <h1>i-KSHANA</h1>
+                </div>
+                <div class="nav-elements">
+                    <div class="ELEMENTS">
+                        <a href="http://127.0.0.1:5502/page.html">HOME</a>
+                        <a href="http://127.0.0.1:5502/details.html">DETAILS</a>
+                    </div>
+                    <button class="login-button">Login</button>
+                </div>
+            </div>
+            <div class="unit-box">
+                <div class="dunit">
+                    <nav class="Names">
+                        <ul>
+                            <li>
+                                <a href="#">D-UNIT 1</a>
+                                <ul>
+                                    <li><a href="unit1.html">Ram Deshpandey </a></li>
+                                    <li><a href="kanya.html">Kanya Kumari</a></li>
+                                    <li><a href="himanshu.html">Himanshu Mishra</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div class="user-details">
+                <div class="user-profile">
+                    <div class="user-img">
+
+                        <img class="user-pic"
+                            src="https://media.istockphoto.com/id/1015381494/vector/policeman-vector-icon.jpg?s=612x612&w=0&k=20&c=tj5C1oF7SwB4KUvMlPS9ZqkcD0I4mni5iC2rAjWD_Ok="
+                            alt="User Profile Picture">
+                    </div>
+
+                    <div class="item-list">
+                        <h1 class="name">Himanshu Mishra</h1>
+                        <p class="stat2" id="warning-box">Active</p>
+                    </div>
+
+                    <div class="gear">
+                        <p>Gear Status</p>
+                    </div>
+                    <div class="gears-list">
+
+                        <div class="item-list">
+                            <p>Helmet</p>
+                            <p class="stat" id="inactive">Inactive</p>
+                        </div>
+                        <div class="item-list">
+                            <p>Armour</p>
+                            <p class="stat">Active</p>
+                        </div>
+                        <div class="item-list">
+                            <p>Gun</p>
+                            <p class="stat" id="warning-box">Active</p>
+                        </div>
+                        <div class="item-list">
+                            <p>Walkie-Talkie</p>
+                            <p class="stat">Active</p>
+                        </div>
+                    </div>
+                    <div class="gear">
+                        <p>Duty Status</p>
+                    </div>
+
+
+                    <div class="gears-list">
+
+                        <div class="item-list">
+                            <p>Check-in</p>
+                            <p class="stat" id="duty-stat">12:00 AM</p>
+                        </div>
+                        <div class="item-list">
+                            <p>Check-Out</p>
+                            <p class="stat" id="duty-stat">09:00 PM</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="mapid"></div>
+
+                <div class="graph">
+                    <div class="graph-contain">
+                        <canvas id="LineChart"></canvas>
+                    </div>
+
+                </div>
+            </div>
+            <div id="selectedUnitDetails">
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.min.js"></script>
+                <script src="script.js"></script>
+            </div>
+
+            <script>
+                document.getElementById('unitForm').addEventListener('submit', function (event) {
+                    event.preventDefault();
+                    var selectedUnit = document.querySelector('input[name="unit"]:checked');
+                    if (selectedUnit) {
+                        displayUnitDetails(selectedUnit.value);
+                    } else {
+                        alert("Please choose a unit option.");
+                    }
+                });
+
+                function displayUnitDetails(unit) {
+                    // Update selectedUnitDetails content
+                    var detailsContainer = document.getElementById('selectedUnitDetails');
+                    switch (unit) {
+                        case 'unit1':
+                            detailsContainer.innerHTML = generateUnitDetailsHTML('D-UNIT 1', ['Ram Deshpandey', 'Kanya Kumari', 'Himanshu Mishra']);
+                            break;
+                        case 'unit2':
+                            detailsContainer.innerHTML = generateUnitDetailsHTML('D-UNIT 2', ['Another Person 1', 'Another Person 2', 'Another Person 3']);
+                            break;
+                        case 'unit3':
+                            detailsContainer.innerHTML = generateUnitDetailsHTML('D-UNIT 3', ['Yet Another 1', 'Yet Another 2', 'Yet Another 3']);
+                            break;
+                        default:
+                            detailsContainer.innerHTML = '';
+                    }
+
+                    // Update other sections dynamically based on the selected unit
+                    updateUserInfo(unit);
+                    updateGearInfo(unit);
+                    updateDutyInfo(unit);
+                }
+
+                function updateUserInfo(unit) {
+                    var userNameElement = document.querySelector('.name');
+                    var userStatusElement = document.querySelector('.stat2');
+
+                    switch (unit) {
+                        case 'unit1':
+                            userNameElement.textContent = 'Kanya Kumari';
+                            userStatusElement.textContent = 'Active';
+                            break;
+                        case 'unit2':
+                            userNameElement.textContent = 'Another User';
+                            userStatusElement.textContent = 'Inactive';
+                            break;
+                        case 'unit3':
+                            userNameElement.textContent = 'Yet Another User';
+                            userStatusElement.textContent = 'Active';
+                            break;
+                        default:
+                            userNameElement.textContent = '';
+                            userStatusElement.textContent = '';
+                    }
+                }
+
+                function updateGearInfo(unit) {
+                    var gearSection = document.querySelector('.gears-list');
+                    gearSection.innerHTML = ''; // Clear previous content
+
+                    switch (unit) {
+                        case 'unit1':
+                            addGearItem('Helmet', 'Active');
+                            addGearItem('Armour', 'Inactive');
+                            addGearItem('Gun', 'Active');
+                            addGearItem('Walkie-Talkie', 'Active');
+                            break;
+                        case 'unit2':
+                            addGearItem('Helmet', 'Inactive');
+                            addGearItem('Armour', 'Active');
+                            addGearItem('Gun', 'Inactive');
+                            addGearItem('Walkie-Talkie', 'Inactive');
+                            break;
+                        case 'unit3':
+                            addGearItem('Helmet', 'Active');
+                            addGearItem('Armour', 'Active');
+                            addGearItem('Gun', 'Active');
+                            addGearItem('Walkie-Talkie', 'Active');
+                            break;
+                        default:
+                            break;
+                    }
+
+                    function addGearItem(item, status) {
+                        var gearItem = document.createElement('div');
+                        gearItem.classList.add('item-list');
+                        gearItem.innerHTML = '<p>' + item + '</p><p class="stat">' + status + '</p>';
+                        gearSection.appendChild(gearItem);
+                    }
+                }
+
+                function updateDutyInfo(unit) {
+                    var dutySection = document.querySelector('.gears-list'); // Assuming this is duty status section
+                    dutySection.innerHTML = ''; // Clear previous content
+
+                    switch (unit) {
+                        case 'unit1':
+                            addDutyItem('Check-in', '10:00 am');
+                            addDutyItem('Check-Out', '05:00 pm');
+                            break;
+                        case 'unit2':
+                            addDutyItem('Check-in', '09:00 am');
+                            addDutyItem('Check-Out', '04:00 pm');
+                            break;
+                        case 'unit3':
+                            addDutyItem('Check-in', '11:00 am');
+                            addDutyItem('Check-Out', '06:00 pm');
+                            break;
+                        default:
+                            break;
+                    }
+
+                    function addDutyItem(item, status) {
+                        var dutyItem = document.createElement('div');
+                        dutyItem.classList.add('item-list');
+                        dutyItem.innerHTML = '<p>' + item + '</p><p class="stat">' + status + '</p>';
+                        dutySection.appendChild(dutyItem);
+                    }
+                }
+
+                function generateUnitDetailsHTML(unitName, members) {
+                    var html = '<ul>';
+                    html += '<li>';
+                    html += '<a href="#">' + unitName + '</a>';
+                    html += '<ul>';
+                    members.forEach(function (member) {
+                        html += '<li><a href="#">' + member + '</a></li>';
+                    });
+                    html += '</ul>';
+                    html += '</li>';
+                    html += '</ul>';
+                    return html;
+                }
+            </script>
+        </section>
+    </div>
+</body>
+
+</html>
